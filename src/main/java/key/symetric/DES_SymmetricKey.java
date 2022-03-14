@@ -10,7 +10,6 @@ public class DES_SymmetricKey {
 
         try {
 
-            //Creating the KeyStore object
             KeyGenerator keygenerator = KeyGenerator.getInstance("DES");
             SecretKey myDesKey = keygenerator.generateKey();
 

@@ -1,8 +1,10 @@
 package key.asymetric;
 
-import javax.crypto.*;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,7 +17,7 @@ public class RSA_ASymmetricKey {
 
     public static void main(String[] argv) {
 
-        try{
+        try {
 
             KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
             generator.initialize(2048);
@@ -27,16 +29,12 @@ public class RSA_ASymmetricKey {
             PublicKey publicKey = pair.getPublic();
 
 
-
             // To save a key in a file, we can use the getEncoded method, which returns the key content in its primary encoding format:
             try (FileOutputStream fos = new FileOutputStream("public.key")) {
                 fos.write(publicKey.getEncoded());
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
 
             // To read the key from a file, we'll first need to load the content as a byte array:
             File publicKeyFile = new File("public.key");
@@ -74,19 +72,7 @@ public class RSA_ASymmetricKey {
 
             System.out.println("Text Decrypted : " + new String(textDecrypted));
 
-        }catch(NoSuchAlgorithmException e){
-            e.printStackTrace();
-        }catch(NoSuchPaddingException e){
-            e.printStackTrace();
-        }catch(InvalidKeyException e){
-            e.printStackTrace();
-        }catch(IllegalBlockSizeException e){
-            e.printStackTrace();
-        }catch(BadPaddingException e){
-            e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException | IOException e) {
             e.printStackTrace();
         }
 

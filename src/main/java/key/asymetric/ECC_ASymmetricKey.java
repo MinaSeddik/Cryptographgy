@@ -18,22 +18,17 @@ public class ECC_ASymmetricKey {
             // BouncyCastle is a Java library that complements the default Java Cryptographic Extension (JCE).
             Security.addProvider(new BouncyCastleProvider());
 
-            KeyPairGenerator ecKeyGen = KeyPairGenerator.getInstance("EC", BouncyCastleProvider.PROVIDER_NAME);
-//            ecKeyGen.initialize(new ECGenParameterSpec("brainpoolP384r1"));
-            ecKeyGen.initialize(new ECGenParameterSpec("secp256r1"));
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("EC", BouncyCastleProvider.PROVIDER_NAME);
+            keyPairGenerator.initialize(new ECGenParameterSpec("secp256r1"));
 
-            // doesn't work, which means we are dancing on the leading edge :)
-            // KeyPairGenerator ecKeyGen = KeyPairGenerator.getInstance("EC");
-            // ecKeyGen.initialize(new ECGenParameterSpec("secp384r1"));
-
-            KeyPair pair = ecKeyGen.generateKeyPair();
+            KeyPair pair = keyPairGenerator.generateKeyPair();
 
 
             // We'll use the public key to encrypt the data and the private one for decrypting it
             PrivateKey privateKey = pair.getPrivate();
             PublicKey publicKey = pair.getPublic();
 
-
+            // Initialize the cipher for encryption
             Cipher cipher = Cipher.getInstance("ECIESwithAES-CBC");
 
             // Initialize the cipher for encryption with a public key
@@ -52,27 +47,14 @@ public class ECC_ASymmetricKey {
             System.out.println("Text Encrypted : " + textEncrypted);
 
             // Initialize the same cipher for decryption with a private key
-//            cipher.init(Cipher.DECRYPT_MODE, privateKey);
-            cipher.init(Cipher.DECRYPT_MODE, pair.getPrivate(), cipher.getParameters());
+            cipher.init(Cipher.DECRYPT_MODE, privateKey, cipher.getParameters());
 
             // Decrypt the text
             byte[] textDecrypted = cipher.doFinal(textEncrypted);
 
             System.out.println("Text Decrypted : " + new String(textDecrypted));
 
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-        } catch (NoSuchProviderException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException| InvalidKeyException| IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException | NoSuchProviderException e) {
             e.printStackTrace();
         }
 

@@ -11,7 +11,6 @@ public class TripleDES_SymmetricKey {
 
         try {
 
-            //Creating the KeyStore object
             KeyGenerator keygenerator = KeyGenerator.getInstance("TripleDES");
             SecretKey myDesKey = keygenerator.generateKey();
 
